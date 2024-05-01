@@ -1,24 +1,26 @@
-# back-end/app/main.py
-from fastapi import FastAPI, APIRouter
+import json
+from typing import Union
+from fastapi import FastAPI
 from mangum import Mangum
-from api.order import router as order_router
 
-app = FastAPI(
-    title="FastAPI Serverless",
-    description="FastAPI를 활용한 서버리스",
-    version="0.1.0",
-    root_path="/v1",
-)
+app = FastAPI()
+temp = -1
 
-api_router = APIRouter(prefix="/api")
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 
-@app.get("/test")
-async def health_check():
-    return {"code": 200, "message": "success", "data": None}
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: Union[str, None] = None):
+    return {"item_id": item_id, "q": q}
 
+def handler(event, context): 
+    Mangum(app)
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Hello from Lambda!' + str(temp))
+    }
 
-api_router.include_router(order_router)
-app.include_router(api_router)
-
-handler = Mangum(app)
+if __name__ == "__main__":
+    handler()
