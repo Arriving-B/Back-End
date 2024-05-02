@@ -5,14 +5,14 @@ from dotenv import load_dotenv
 import os
 
 # 데이터베이스 접속 주소
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-DATABASE_URL = f'mysql+pymysql://{os.environ["sql_db_user"]}:{os.environ["sql_db_password"]}@{os.environ["sql_db_address"]}:{os.environ["sql_db_port"]}/{os.environ["sql_db_connect"]}'
+DATABASE_URL = f'mysql+pymysql://{os.environ["sql_db_user"]}:{os.environ["sql_db_password"]}@{os.environ["sql_db_address"]}:{os.environ["sql_db_port"]}/{os.environ["sql_db_connect"]}?charset=utf8'
 
 # 데이터베이스 사용 규칙
 engine = create_engine(
-    DATABASE_URL
+    DATABASE_URL, pool_pre_ping=True
 )
 
 SessionLocal = sessionmaker(

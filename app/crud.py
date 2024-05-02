@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from . import models, schemas
+import models, schemas
 
 # 클라이언트로부터 받은 데이터를 기입
 ## 피드백
@@ -93,23 +93,23 @@ def create_station(db: Session, station: schemas.StationCreate):
 
 ## 버스-정류장
 def get_bus_list(db: Session, station_id: str):
-    return db.query(models.Bus_Station).filter(
-        models.Bus_Station.station_id == station_id
+    return db.query(models.Route).filter(
+        models.Route.station_id == station_id
     ).all()
 
 def get_route(db: Session, bus_id: str):
-    return db.query(models.Bus_Station).filter(
-        models.Bus_Station.bus_id == bus_id
+    return db.query(models.Route).filter(
+        models.Route.bus_id == bus_id
     ).all()
 
 def get_missTime(db: Session, station_id: str, bus_id: str):
     return db.query(models.Bus).filter(
-        models.Bus_Station.station_id == station_id &
-        models.Bus_Station.bus_id == bus_id
+        models.Route.station_id == station_id &
+        models.Route.bus_id == bus_id
     ).first()
 
-def create_node(db: Session, node: schemas.Bus_StationCreate):
-    node_db_create = models.Bus_Station(
+def create_node(db: Session, node: schemas.RouteCreate):
+    node_db_create = models.Route(
         station_id = node.station_id,
         bus_id = node.bus_id,
         miss_time = node.miss_time
@@ -120,15 +120,15 @@ def create_node(db: Session, node: schemas.Bus_StationCreate):
     print("Node Created : ", node_db_create)
     return node_db_create
 
-def update_missTime(db: Session, node: models.Bus_Station, new_miss_time: int):
-    node_db_update = db.query(models.Bus_Station).filter(models.Bus_Station == node).first()
+def update_missTime(db: Session, node: models.Route, new_miss_time: int):
+    node_db_update = db.query(models.Route).filter(models.Route == node).first()
     node_db_update.miss_time = new_miss_time
     db.commit()
     print("Node Updated : ", node_db_update)
     return node_db_update
 
-def delete_node(db: Session, node: models.Bus_Station):
-    node_db_delete = db.query(models.Bus_Station).filter(models.Bus_Station == node).first()
+def delete_route(db: Session, node: models.Route):
+    node_db_delete = db.query(models.Route).filter(models.Route == node).first()
     db.delete(node_db_delete)
     db.commit()
     print("Node Deleted : ", node_db_delete)

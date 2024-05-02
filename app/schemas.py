@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Union
 
 # 클라이언트로부터의 입력 명시
 ## 피드백 테이블
@@ -54,14 +53,14 @@ class Station(StationBase):
         orm_mode = True
 
 ## 버스-정류장 매칭 테이블
-class Bus_StationBase(BaseModel):
+class RouteBase(BaseModel):
     station_id: str
     bus_id: str
     miss_time: int = 0
 
-class Bus_StationCreate(Bus_StationBase):
+class RouteCreate(RouteBase):
     pass
 
-class Bus_Station(Bus_StationBase):
+class Route(RouteBase):
     class Config:
         orm_mode = True
