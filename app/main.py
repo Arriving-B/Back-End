@@ -4,9 +4,18 @@ from mangum import Mangum
 from sqlalchemy.orm import Session
 
 import crud, models, schemas
+from api.station import *
 from database import SessionLocal, engine
 
-models.Base.metadata.create_all(bind=engine)
+from dotenv import load_dotenv
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+#models.Base.metadata.create_all(bind=engine)
+openApiEndpoint = "http://apis.data.go.kr/1613000/BusSttnInfoInqireService"
+
 
 app = FastAPI()
 handler = Mangum(app)
@@ -21,10 +30,10 @@ def get_db():
 
 
 @app.get("/")
-async def read_root(db: Session = Depends(get_db)):
-    return {"Hello": "World"}
+async def read_root():
+    return {"Hello":"FastAPI!"}
 
-
-@app.get("/items")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/api/v1/station")
+async def read_station_by_location(lat: float, lon: float, skip: int = 0):
+    url = f"{openApiEndpoint}/getCrdntPrxmtSttnList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&gpsLati={lat}&gpsLong={lon}"
+    return await get_station(url, skip)
