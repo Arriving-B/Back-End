@@ -9,7 +9,7 @@ async def get_station(url: str, skip: int):
                 dataBundle = response.json()
                 data = dataBundle["response"]["body"]["items"]["item"][skip]
                 return {
-                    "statusCode": 200,
+                    "status": 200,
                     "message": "Station inquiry successful",
                     "data": {
                         "station_id": data["nodeid"],
