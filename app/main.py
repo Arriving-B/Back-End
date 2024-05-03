@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 import crud, models, schemas
 from api.station import *
+from api.bus import *
 from database import SessionLocal, engine
 
 from dotenv import load_dotenv
@@ -37,3 +38,9 @@ async def read_root():
 async def read_station_by_location(lat: float, lon: float, skip: int = 0):
     url = f"{openApiEndpoint}/getCrdntPrxmtSttnList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&gpsLati={lat}&gpsLong={lon}"
     return await get_station(url, skip)
+
+@app.get("/api/v1/bus")
+async def read_station_by_location(cityCode: int, stationId: str):
+    url = f"{openApiEndpoint}/getSttnThrghRouteList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&nodeid{stationId}"
+    return await get_busList(url)
+
