@@ -40,7 +40,7 @@ async def read_station_by_location(lat: float, lon: float, skip: int = 0):
     return await get_station(url, skip)
 
 @app.get("/api/v1/bus")
-async def read_station_by_location(cityCode: int, stationId: str):
+async def read_buses_by_station(cityCode: int, stationId: str):
     url = f"{openApiEndpoint}/getSttnThrghRouteList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&nodeid{stationId}"
     return await get_busList(url)
 
