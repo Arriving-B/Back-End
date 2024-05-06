@@ -40,7 +40,8 @@ busColor = {
 }
 
 # GET Method
-async def get_busList(url: str):
+## 정류장의 버스 목록 조회
+async def get_curSttnBusList(url: str):
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get(url)
@@ -53,8 +54,9 @@ async def get_busList(url: str):
                         "name": temp["routeno"],
                         "type": temp["routetp"][0:-2],
                         "color": busColor.get(temp["routetp"][0:-2]),
-                        "station_left": temp["arrprevstationcnt"],
-                        "time_left": temp["arrtime"]
+                        # -1 : 도착 정보 없음
+                        "station_left": -1,
+                        "time_left": -1
                     })
                 return {
                     "status": 200,
@@ -73,4 +75,26 @@ async def get_busList(url: str):
                 "status": 404,
                 "message": "Bus not found"
             }
+        
+# GET Method
+## 도착 예정 버스목록 조회
+async def get_arvlBusList(url: str, data: dict):
+    if data["status"] != 200: 
+        return data
+    
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url)
+            if response.status_code == 200:
+                dataBundle = response.json()
+                print(dataBundle)
+                for temp in dataBundle["response"]["body"]["items"]["item"]:
+                    for busData in data["data"]["bus_list"]:
+                        if busData["bus_id"] == temp["routeid"]:
+                            if busData["time_left"] == -1 or busData["time_left"] > temp["arrtime"]:
+                                busData["station_left"] = temp["arrprevstationcnt"]
+                                busData["time_left"] = temp["arrtime"]
+                return data
+        finally:
+            return data
         
