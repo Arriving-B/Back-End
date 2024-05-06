@@ -14,7 +14,7 @@ async def get_curSttnBusList(url: str, busColorData: dict):
                         "bus_id": temp["routeid"],
                         "name": temp["routeno"],
                         "type": temp["routetp"][0:-2],
-                        "color": busColor.get(temp["routetp"][0:-2]),
+                        "color": busColorData[temp["routetp"][0:-2]],
                         # -1 : 도착 정보 없음
                         "station_left": -1,
                         "time_left": -1

@@ -54,3 +54,8 @@ async def read_buses_by_station(stationId: str, cityCode: int):
     url = f"{openApiEndpoint}/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&nodeId={stationId}"
     return await get_arvlBusList(url, data)
 
+@app.get("/api/v1/route")
+async def read_route_details(busId: str, cityCode: int):
+    cityCodeUrl = f"{openApiEndpoint}/BusRouteInfoInqireService/getCtyCodeList?serviceKey={os.environ["data_go_kr_key"]}&_type=json"
+    url = f"{openApiEndpoint}/BusRouteInfoInqireService/getRouteInfoIem?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&routeId={busId}"
+    return await get_route(url, cityCodeUrl, cityCode, busColorData)
