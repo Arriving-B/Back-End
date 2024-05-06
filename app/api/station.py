@@ -7,23 +7,38 @@ async def get_station(url: str, skip: int):
             response = await client.get(url)
             if response.status_code == 200:
                 dataBundle = response.json()
+
+                # 정류장 없음
+                if dataBundle["response"]["body"]["totalCount"] <= skip:
+                    return {
+                        "status": 204,
+                        "message": "Station not found"
+                    }
+                
+                # 정류장 있음
                 data = dataBundle["response"]["body"]["items"]["item"][skip]
                 return {
                     "status": 200,
                     "message": "Station inquiry successful",
                     "data": {
                         "station_id": data["nodeid"],
-                        "name": data["nodenm"]
+                        "name": data["nodenm"],
+                        "city_code": data["citycode"],
+                        "latitude": data["gpslati"],
+                        "longitude": data["gpslong"]
                     }
                 }
             else:
+                # OpenAPI로 부터 지정되지 않은 응답 수신
                 return {
                     "status": 502,
                     "message": "Open API server is gone"
                 }
         except:
+            # 예외처리
             return {
                 "status": 404,
-                "message": "Station not found"
+                "message": "Not found"
             }
+            
         
