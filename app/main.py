@@ -15,7 +15,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 #models.Base.metadata.create_all(bind=engine)
-openApiEndpoint = "http://apis.data.go.kr/1613000/BusSttnInfoInqireService"
+openApiEndpoint = "http://apis.data.go.kr/1613000"
 
 
 app = FastAPI()
@@ -36,11 +36,11 @@ async def read_root():
 
 @app.get("/api/v1/station")
 async def read_station_by_location(lat: float, lon: float, skip: int = 0):
-    url = f"{openApiEndpoint}/getCrdntPrxmtSttnList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&gpsLati={lat}&gpsLong={lon}"
+    url = f"{openApiEndpoint}/BusSttnInfoInqireService/getCrdntPrxmtSttnList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&gpsLati={lat}&gpsLong={lon}"
     return await get_station(url, skip)
 
 @app.get("/api/v1/bus")
-async def read_buses_by_station(cityCode: int, stationId: str):
-    url = f"{openApiEndpoint}/getSttnThrghRouteList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&nodeid={stationId}"
+async def read_buses_by_station(stationId: str, cityCode: int):
+    url = f"{openApiEndpoint}/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&nodeId={stationId}"
     return await get_busList(url)
 
