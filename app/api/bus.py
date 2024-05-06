@@ -48,7 +48,6 @@ async def get_arvlBusList(url: str, data: dict):
             response = await client.get(url)
             if response.status_code == 200:
                 dataBundle = response.json()
-                print(dataBundle)
                 for temp in dataBundle["response"]["body"]["items"]["item"]:
                     for busData in data["data"]["bus_list"]:
                         if busData["bus_id"] == temp["routeid"]:
