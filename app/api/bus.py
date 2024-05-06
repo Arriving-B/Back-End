@@ -12,8 +12,10 @@ async def get_busList(url: str):
                     data.append({
                         "bus_id": temp["routeid"],
                         "name": temp["routeno"],
+                        "type": temp["routetp"][0:-2],
                         "color": "#aaffaa",
-                        "near_station": ["???", "??", "?", "Next"]
+                        "station_left": temp["arrprevstationcnt"],
+                        "time_left": temp["arrtime"]
                     })
                 return {
                     "status": 200,
