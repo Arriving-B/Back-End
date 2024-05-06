@@ -3,7 +3,7 @@ import httpx
 busColor = {
     # RED
     "광역" : "#F72F08",
-    "직행" : "#F72F08",
+    "직행좌석" : "#F72F08",
 
     # GREEN
     "지선" : "#5BB025",
