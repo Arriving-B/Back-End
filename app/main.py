@@ -58,3 +58,8 @@ async def read_route_details(busId: str, cityCode: int):
     cityCodeUrl = f"{openApiEndpoint}/BusRouteInfoInqireService/getCtyCodeList?serviceKey={os.environ["data_go_kr_key"]}&_type=json"
     url = f"{openApiEndpoint}/BusRouteInfoInqireService/getRouteInfoIem?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&routeId={busId}"
     return await get_route(url, cityCodeUrl, cityCode, busColorData)
+
+@app.get("/api/v1/route/map")
+async def read_route_details(busId: str, cityCode: int):
+    url = f"{openApiEndpoint}/BusRouteInfoInqireService/getRouteAcctoThrghSttnList?serviceKey={os.environ["data_go_kr_key"]}&pageNo=1&numOfRows=200&_type=json&cityCode={cityCode}&routeId={busId}"
+    return await get_routeMap(url)

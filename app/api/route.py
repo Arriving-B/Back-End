@@ -1,6 +1,7 @@
 import httpx
 
 # GET Method
+## 노선 정보 출력
 async def get_route(url: str, cityCodeUrl: str, cityCode: int, busColorData: dict):
     async with httpx.AsyncClient() as client:
         try:
@@ -42,4 +43,38 @@ async def get_route(url: str, cityCodeUrl: str, cityCode: int, busColorData: dic
                 "message": "Not found"
             }
             
-        
+# GET Method
+## 노선 경유 정류장 목록 출력
+async def get_routeMap(url: str):
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url)
+            if response.status_code == 200:
+                dataBundle = response.json()
+                data = []
+                for temp in dataBundle["response"]["body"]["items"]["item"]:
+                    data.append({
+                        "station_id": temp["nodeid"],
+                        "name": temp["nodenm"],
+                        "up_down": True if temp["updowncd"] else False,
+                        "order": temp["nodeord"]
+                    })
+                return {
+                    "status": 200,
+                    "message": "Route inquiry successful",
+                    "data": {
+                        "station_list": data
+                    }
+                }
+            else:
+                # OpenAPI로 부터 지정되지 않은 응답 수신
+                return {
+                    "status": 502,
+                    "message": "Open API server is gone"
+                }
+        except:
+            # 예외처리
+            return {
+                "status": 404,
+                "message": "Not found"
+            }
