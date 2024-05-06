@@ -6,10 +6,17 @@ from sqlalchemy.orm import Session
 import crud, models, schemas
 from api.station import *
 from api.bus import *
+from api.route import *
 from database import SessionLocal, engine
+import json
 
 from dotenv import load_dotenv
 import os
+
+# json file 경로
+file_path = "api/busColor.json"
+with open(file_path, encoding="UTF-8") as json_file:
+    busColorData = json.load(json_file)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
@@ -42,7 +49,7 @@ async def read_station_by_location(lat: float, lon: float, skip: int = 0):
 @app.get("/api/v1/bus")
 async def read_buses_by_station(stationId: str, cityCode: int):
     url = f"{openApiEndpoint}/BusSttnInfoInqireService/getSttnThrghRouteList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&nodeid={stationId}"
-    data = await get_curSttnBusList(url)
+    data = await get_curSttnBusList(url, busColorData)
     print(data)
     url = f"{openApiEndpoint}/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList?serviceKey={os.environ["data_go_kr_key"]}&_type=json&cityCode={cityCode}&nodeId={stationId}"
     return await get_arvlBusList(url, data)
