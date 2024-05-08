@@ -57,4 +57,24 @@ async def get_arvlBusList(url: str, data: dict):
                 return data
         finally:
             return data
-        
+
+# GET Method
+## 버스 조회
+async def get_busByContext(url: str, busColorData: dict):
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url)
+            if response.status_code == 200:
+                dataBundle = response.json()
+                data = []
+                for temp in dataBundle["response"]["body"]["items"]["item"]:
+                    data.append({
+                        "bus_id": temp["routeid"],
+                        "num": temp["routeno"],
+                        "type": temp["routetp"][0:-2],
+                        "color": busColorData[temp["routetp"][0:-2]]
+                    })
+                return data
+            return None
+        except:
+            return None
