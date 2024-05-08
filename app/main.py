@@ -1,12 +1,12 @@
-from typing import Union
 from fastapi import Depends, FastAPI, HTTPException
 from mangum import Mangum
 from sqlalchemy.orm import Session
 
-import crud, models, schemas
+import models, schemas
 from api.station import *
 from api.bus import *
 from api.route import *
+from api.feedback import *
 from database import SessionLocal, engine
 import json
 
@@ -63,3 +63,7 @@ async def read_route_details(busId: str, cityCode: int):
 async def read_route_details(busId: str, cityCode: int):
     url = f"{openApiEndpoint}/BusRouteInfoInqireService/getRouteAcctoThrghSttnList?serviceKey={os.environ["data_go_kr_key"]}&pageNo=1&numOfRows=200&_type=json&cityCode={cityCode}&routeId={busId}"
     return await get_routeMap(url)
+
+@app.put("/api/v1/feedback")
+def put_feedback(item: schemas.FeedbackCreate, db: Session = Depends(get_db)):
+    return create_feedback(db, item)
