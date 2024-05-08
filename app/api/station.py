@@ -41,4 +41,23 @@ async def get_station(url: str, skip: int):
                 "message": "Not found"
             }
             
-        
+# GET Method
+## 정류장 조회
+async def get_stationByContext(url: str):
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url)
+            if response.status_code == 200:
+                dataBundle = response.json()
+                data = []
+                for temp in dataBundle["response"]["body"]["items"]["item"]:
+                    data.append({
+                        "station_id": temp["nodeid"],
+                        "name": temp["nodenm"],
+                        "latitude": temp["gpslati"],
+                        "longitude": temp["gpslong"]
+                    })
+                return data
+            return None
+        except:
+            return None

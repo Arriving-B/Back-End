@@ -64,6 +64,34 @@ async def read_route_details(busId: str, cityCode: int):
     url = f"{openApiEndpoint}/BusRouteInfoInqireService/getRouteAcctoThrghSttnList?serviceKey={os.environ["data_go_kr_key"]}&pageNo=1&numOfRows=200&_type=json&cityCode={cityCode}&routeId={busId}"
     return await get_routeMap(url)
 
+@app.get("/api/v1/search")
+async def read_search(cityCode: int, context: str):
+    # 준비반
+    busFindUrl = f"{openApiEndpoint}/BusRouteInfoInqireService/getRouteNoList?serviceKey={os.environ["data_go_kr_key"]}&pageNo=1&numOfRows=100&_type=json&cityCode={cityCode}&routeNo={context}"
+    stationFindUrl = f"{openApiEndpoint}/BusSttnInfoInqireService/getSttnNoList?serviceKey={os.environ["data_go_kr_key"]}&pageNo=1&numOfRows=100&_type=json&cityCode={cityCode}&nodeNm={context}"
+    
+    try: 
+        # 연산반
+        busList = await get_busByContext(busFindUrl, busColorData)
+        stationList = await get_stationByContext(stationFindUrl)
+
+        # 응답반
+        status = 200 if busList or stationList else 204
+        return {
+            "status": status,
+            "message": "Search successful" if status == 200 else "No content",
+            "data": {
+                "bus_list": busList,
+                "station_list": stationList
+            }
+        }
+    except:
+        return {
+            "status": 404,
+            "message": "Not found"
+        }
+
+
 @app.put("/api/v1/feedback")
 def put_feedback(item: schemas.FeedbackCreate, db: Session = Depends(get_db)):
     return create_feedback(db, item)
