@@ -1,4 +1,3 @@
-from typing import Union
 from fastapi import Depends, FastAPI, HTTPException
 from mangum import Mangum
 from sqlalchemy.orm import Session
