@@ -52,6 +52,7 @@ async def get_routeMap(url: str):
             if response.status_code == 200:
                 dataBundle = response.json()
                 data = []
+                print(dataBundle)
                 for temp in dataBundle["response"]["body"]["items"]["item"]:
                     data.append({
                         "station_id": temp["nodeid"],

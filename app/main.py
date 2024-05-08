@@ -21,7 +21,7 @@ with open(file_path, encoding="UTF-8") as json_file:
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-#models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 openApiEndpoint = "http://apis.data.go.kr/1613000"
 
 
