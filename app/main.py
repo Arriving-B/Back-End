@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 from sqlalchemy.orm import Session
 
@@ -21,12 +22,25 @@ with open(file_path, encoding="UTF-8") as json_file:
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)    
 openApiEndpoint = "http://apis.data.go.kr/1613000"
 
 
 app = FastAPI()
 handler = Mangum(app)
+
+origins = [
+    "http://localhost/",
+    "http://localhost:5173/",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=[""],
+    allow_headers=[""],
+)
 
 # 의존성 주입
 def get_db():
