@@ -56,7 +56,7 @@ async def get_routeMap(url: str):
                     data.append({
                         "station_id": temp["nodeid"],
                         "name": temp["nodenm"],
-                        "up_down": True if temp["updowncd"] else False,
+                        "up_down": (True if temp["updowncd"] else False) if list(dict(temp).keys()).count("updowncd") else None,
                         "order": temp["nodeord"]
                     })
                 return {
