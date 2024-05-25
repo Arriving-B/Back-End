@@ -106,6 +106,6 @@ async def read_search(cityCode: int, context: str):
         }
 
 
-@app.put("/api/v1/feedback")
-def put_feedback(item: schemas.FeedbackCreate, db: Session = Depends(get_db)):
+@app.post("/api/v1/feedback")
+def create_feedback(item: schemas.FeedbackCreate, db: Session = Depends(get_db)):
     return create_feedback(db, item)
