@@ -29,17 +29,12 @@ openApiEndpoint = "http://apis.data.go.kr/1613000"
 app = FastAPI()
 handler = Mangum(app)
 
-origins = [
-    "http://localhost",
-    "http://localhost:5173",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=[""],
-    allow_headers=[""],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # 의존성 주입
