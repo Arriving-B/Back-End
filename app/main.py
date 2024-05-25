@@ -104,3 +104,7 @@ async def read_search(cityCode: int, context: str):
 @app.post("/api/v1/feedback")
 def post_feedback(item: schemas.FeedbackCreate, db: Session = Depends(get_db)):
     return create_feedback(db, item)
+
+@app.options("/api/v1/feedback")
+def check_feedback(item: schemas.FeedbackCreate, db: Session = Depends(get_db)):
+    return post_feedback(item, db)
